@@ -7,11 +7,18 @@ df = pd.read_csv("/home/user/Desktop/project/output data/mp1.txt",sep="\t")
 
 X = np.array(df)  #convert df into array
 Xn=X[:,4]         #array of x component
-Yn=X[:,6]         #array of z component
-Zn=X[:,5]         #array of y component
+Zn=X[:,5]         #array of z component
+Yn=X[:,6]         #array of y component
 
-t_x=Xn[1]-Xn[0]/Zn[1]-Zn[0]
-t_y=Yn[1]-Yn[0]/Zn[1]-Zn[0]
+
+
+
+
+t_x=[14211.523395963526,0,0,0,0,0,0,0,0,0,0,0,0]
+
+
+
+t_y=[7250.500762060287 ,0,0,0,0,0,0,0,0,0,0,0,0]
 
 #h = k(q/p)(1+tx^2+ty^2)(1/2)
 #k= 0.29979Gev(cTm)^(-1)
@@ -32,10 +39,10 @@ n=len(Xn)
 K=0.29979
 (q_p)=0
 
-h=K*(q_p)*mp.sqrt(1+t_x*t_x+t_y*t_y)
 
 
-Bx=30000
+
+Bx=15000
 By=0
 dz=1
 S_x= (1/2)*Bx*dz*dz
@@ -57,20 +64,31 @@ X_z0=0
 
 #array declaration
 
-Y_z=[0,0,0,0,0,0,0,0,0,0,0,0,0]
+Y_z=[-7250.5,0,0,0,0,0,0,0,0,0,0,0,0]
 
-X_z=[0,0,0,0,0,0,0,0,0,0,0,0,0]
+X_z=[7056.05,0,0,0,0,0,0,0,0,0,0,0,0]
+
 
 
 #perdiction formulae
 #furthur points are find using prediction formulae
 #loop run from x[1] to x[n-1] i.e upto the last number in the array
-for i in range(1,n) :
+for i in range(0,n) :
     
-     X_z[i]=X_z[i-1]+t_x*dz+h*(t_x*t_y*S_x-(1-t_x**2)*S_y) + (h**2)*(t_x*((3*(t_y**2))+1)*S_xx - t_y*((3*(t_x**2) )+1)*S_xy -t_y*((3*(t_x**2))+1)*S_yx+t_x*((3*(t_x**2))+3)*S_yy)
-     print(X_z[i]) 
-     Y_z[i]=Y_z[i-1] + t_y*dz + h*((1 + t_y**2 ) *S_x -t_x*t_y*S_y) + (h**2)*(t_y*(3*(t_y**2)+3)*S_xx-t_x*(3*(t_y**2)+1)*S_xy-t_x*(3*(t_y**2)+1)*S_yx+t_y*(3*t_x**2+1)*S_yy) 
-     print(Y_z[i])
+     h=K*(q_p)*mp.sqrt(1+t_x[i]*t_x[i]+t_y[i]*t_y[i])
+    
+     
+     t_x[0]=t_x[0]+h*(t_x[0]*t_y[0]*R_x-(1+(t_x[0]**2))*R_y)+h**2*(t_y[0]*(3*(t_y[0]**2)+1)*R_xx-t_x[0]*(3*(t_y[0]**2)+1)*R_xy-t_x[0]*(3*(t_y[0]**2)+1)*R_yx+t_y[0]*(3*(t_y[0]**2)+3)*R_yy)
+     
+     
+     t_y[0]=t_y[0]+h*((1+(t_y[0]**2))*R_yx-t_x[0]*t_y[0]*R_y)+h**2*(t_x[0]*(3*(t_y[0]**2)+1)*R_xx-t_y[0]*(3*(t_x[0]**2)+1)*R_xy-t_y[0]*(3*(t_x[0]**2)+1)*R_yx+t_x[0]*(3*(t_x[0]**2)+3)*R_yy)
+     
+     X_z[i]=X_z[i-1]+t_x[i]*dz+h*(t_x[i]*t_y[i]*S_x-(1-t_x[i]**2)*S_y) + (h**2)*(t_x[i]*((3*(t_y[i]**2))+1)*S_xx - t_y[i]*((3*(t_x[i]**2) )+1)*S_xy -t_y[i]*((3*(t_x[i]**2))+1)*S_yx+t_x[i]*((3*(t_x[i]**2))+3)*S_yy)
+     
+
+     Y_z[i]=Y_z[i-1] + t_y[i]*dz + h*((1 + t_y[i]**2 ) *S_x -t_x[i]*t_y[i]*S_y) + (h**2)*(t_y[i]*(3*(t_y[i]**2)+3)*S_xx-t_x[i]*(3*(t_y[i]**2)+1)*S_xy-t_x[i]*(3*(t_y[i]**2)+1)*S_yx+t_y[i]*(3*t_x[i]**2+1)*S_yy) 
+     
+    
 plot1=plt.figure(1)
 plt.plot(X_z,Zn, )
 plt.plot(Y_z,Zn, )
@@ -81,7 +99,6 @@ plt.title('plot obtained for the points from predicted  data (1Gev) anti muon')
 
 plt.legend(["X vs Z", "Y vs Z"])
 plt.show()
-
 
 
 
