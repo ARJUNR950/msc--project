@@ -2,7 +2,7 @@ import numpy as np   #for mathematical calculations
 import pandas as pd   #for data frame creation
 import matplotlib.pyplot as plt  #for plotting
 import math as mp #mathematical works
-df = pd.read_csv("/home/user/Desktop/project/output data/mp2.txt",sep="\t")
+df = pd.read_csv("/home/user/Desktop/project/output data/mp15.txt",sep="\t")
 
 
 X = np.array(df)  #convert df into array
@@ -13,6 +13,8 @@ Yn=X[:,6]         #array of y component
 
 #h = k(q/p)(1+tx^2+ty^2)(1/2)
 #k= 0.29979Gev(cTm)^(-1)
+#q =.303
+#p=
 #tx=dx/dz   , instantaneous slope
 #ty=dy/dz
 #dz denote (ze-z0) is taken as 1mm
@@ -25,14 +27,14 @@ t_y=(Yn[1]-Yn[0])/(Zn[1]-Zn[0])
 
 n=len(Xn)
 K=0.29979
-(q_p)=0
+(q_p)=(10**(-4))
 
 
 
 
-Bx=15000
-By=0
-dz=1.0
+Bx=1.5
+By=(0.0)
+dz= Zn[1]-Zn[0]
 S_x= (1/2)*Bx*dz*dz
 S_y= (1/2)* By*dz*dz
 S_xx= (1/6)*Bx*Bx*dz*dz*dz
@@ -46,7 +48,7 @@ R_xy=((1/2)*(Bx*By)*(dz*dz))
 R_yx=((1/2)*(Bx*By)*(dz*dz))
 R_yy=((1/2)*(By*By)*(dz*dz))
 
-h=K*(q_p)*mp.sqrt(1+t_x*t_x+t_y*t_y)
+
 
 #array declaration
 
@@ -65,17 +67,14 @@ Y1.append(Y_z)
 #furthur points are find using prediction formulae
 #loop run from x[1] to x[n-1] i.e upto the last number in the array
 for i in range(1,n) :
-     
-     dz=Zn[1]-Zn[0]
+     dz=dz+1
+     h=(K*(q_p)*np.sqrt(1+(t_x*t_x)+(t_y*t_y)))
      X_z=X_z+t_x*dz+h*(t_x*t_y*S_x-(1-t_x**2)*S_y) + (h**2)*(t_x*((3*(t_y**2))+1)*S_xx - t_y*((3*(t_x**2) )+1)*S_xy -t_y*((3*(t_x**2))+1)*S_yx+t_x*((3*(t_x**2))+3)*S_yy)
      Y_z=Y_z + t_y*dz + h*((1 + t_y**2 ) *S_x -t_x*t_y*S_y) + (h**2)*(t_y*(3*(t_y**2)+3)*S_xx-t_x*(3*(t_y**2)+1)*S_xy-t_x*(3*(t_y**2)+1)*S_yx+t_y*(3*t_x**2+1)*S_yy) 
-     
-     t_x=t_x+h*(t_x*t_y*R_x-(1+(t_x**2))*R_y)+h**2*(t_y*(3*(t_y*2)+1)*R_xx-t_x*(3*(t_y**2)+1)*R_xy-t_x*(3*(t_y**2)+1)*R_yx+t_y*(3*(t_y**2)+3)*R_yy)
-     
-     
+     t_x=t_x+h*(t_x*t_y*R_x-(1+(t_x**2))*R_y)+(h**2)*(t_y*(3*(t_y*2)+1)*R_xx-t_x*(3*(t_y**2)+1)*R_xy-t_x*(3*(t_y**2)+1)*R_yx+t_y*(3*(t_y**2)+3)*R_yy)
      t_y=t_y+h*((1+(t_y**2))*R_yx-t_x*t_y*R_y)+h**2*(t_x*(3*(t_y**2)+1)*R_xx-t_y*(3*(t_x**2)+1)*R_xy-t_y*(3*(t_x**2)+1)*R_yx+t_x*(3*(t_x**2)+3)*R_yy)
      
-     
+   
 #adding elements to X1 and Y1
      X1.append  (X_z)
      Y1.append  (Y_z)
@@ -93,16 +92,13 @@ plt.ylabel('posz(mm)')
 yval=plt.scatter(Y1,Zn,label='posy prediction (mm)')
 
 #giving title to the graph
-plt.title(' plot obtained from points using prediction formula (2Gev)')
+plt.title(' plot obtained from points using prediction formula (15Gev)')
 
 
 #naming the data sets,getting label on plot
 plt.legend(["X vs Z", "Y vs Z"])
 plt.show()
 
-     
-    
-      
 
 
 
